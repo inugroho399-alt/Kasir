@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Nota</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="nota">
+<h2>NOTA PEMBAYARAN</h2>
+<p>ID: {{ nota_id }}<br>{{ waktu }}</p>
+<p>Pelanggan: <b>{{ nama }}</b></p>
+
+{% if kurang %}
+<div class="warning">⚠️ UANG TIDAK MENCUKUPI!</div>
+{% endif %}
+<div class="table-wrap">
+<table>
+<tr><th>Item</th><th>Qty</th><th>Harga</th><th>Sub</th></tr>
+{% for i in items %}
+<tr>
+<td>{{ i.nama }}</td>
+<td>{{ i.qty }}</td>
+<td>{{ i.harga }}</td>
+<td>{{ i.subtotal }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+<div class="summary">
+<p>Subtotal: {{ subtotal }}</p>
+<p>Diskon ({{diskon}}%): -{{ pot_diskon }}</p>
+<p>Pajak ({{pajak}}%): +{{ pot_pajak }}</p>
+<h3>Total: {{ total }}</h3>
+<p>Uang Diterima: {{ diterima }}</p>
+<h3>Kembalian: {{ kembalian }}</h3>
+</div>
+
+<button onclick="window.print()">Print</button>
+<a href="/">Transaksi Baru</a>
+</div>
+</body>
+</html>

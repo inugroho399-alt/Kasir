@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kasir Modern</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+.popup{
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.6);
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.popup-box{
+  background:#fff;
+  padding:20px;
+  border-radius:8px;
+  text-align:center;
+  width:300px;
+}
+
+.popup-box h3{
+  margin:0 0 10px;
+  color:red;
+}
+
+.popup-box button{
+  margin-top:10px;
+  padding:6px 15px;
+  border:none;
+  background:#d32f2f;
+  color:white;
+  border-radius:4px;
+  cursor:pointer;
+}
+</style>
+
+</head>
+<body>
+    
+
+<div class="sidebar">
+<h2>Kasir</h2>
+<a href="/">Transaksi</a>
+<a href="/laporan">Laporan</a>
+</div>
+
+<div class="content">
+<h1>Transaksi Baru</h1>
+<form method="post" onsubmit="return cekUang()">
+<input name="nama" placeholder="Nama Pelanggan" required>
+
+<div id="items">
+<div class="row">
+<input name="item_nama[]" placeholder="Item">
+<input type="number" name="item_qty[]" value="1">
+<input type="number" name="item_harga[]" placeholder="Harga">
+</div>
+</div>
+
+<button type="button" onclick="addItem()">+ Tambah Item</button>
+<div class="container">
+<div class="grid2">
+<input type="number" name="diskon" placeholder="Diskon %">
+<input type="number" name="pajak" placeholder="Pajak %">
+</div>
+</div>
+
+<input type="number" name="diterima" placeholder="Uang Diterima" required>
+
+<button type="submit">Proses Nota</button>
+</form>
+</div>
+
+<script>
+function addItem(){
+ const d=document.createElement("div");
+ d.className="row";
+ d.innerHTML=`<input name="item_nama[]" placeholder="Item">
+ <input type="number" name="item_qty[]" value="1">
+ <input type="number" name="item_harga[]" placeholder="Harga">`;
+ document.getElementById("items").appendChild(d);
+}
+
+function cekUang(){
+ let qty = document.getElementsByName("item_qty[]");
+ let harga = document.getElementsByName("item_harga[]");
+ let diterima = document.getElementsByName("diterima")[0].value;
+
+ let total = 0;
+ for(let i=0;i<harga.length;i++){
+   total += (qty[i].value || 0) * (harga[i].value || 0);
+ }
+
+ if(parseInt(diterima) < total){
+   document.getElementById("popupText").innerText =
+     "Uang diterima kurang!\nTotal: Rp " + total;
+   document.getElementById("popupAlert").style.display="flex";
+   return false;
+ }
+ return true;
+}
+
+function tutupPopup(){
+ document.getElementById("popupAlert").style.display="none";
+}
+</script>
+
+<div id="popupAlert" class="popup">
+  <div class="popup-box">
+    <h3>⚠️ Peringatan</h3>
+    <p id="popupText"></p>
+    <button onclick="tutupPopup()">OK</button>
+  </div>
+</div>
+
+</body>
+</html>
